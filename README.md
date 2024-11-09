@@ -1,3 +1,5 @@
+# Old engineering project at university
+
 # Run Project
 1. git clone https://git.wmi.amu.edu.pl/s426206/SushiBar.git in terminal/git bash
 2. (recomended via virtualenv) pip install -r requirements.txt
