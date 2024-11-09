@@ -1,0 +1,65 @@
+<script>
+    function closePopUp(id, show=undefined) {
+        var display = $(id).css('display') == 'block' ? 'none' : 'block';
+        $(id).css('display', display);
+
+        if(show!=undefined) {
+            if(show)
+                $(id).css('display', 'block');
+            else
+                $(id).css('display', 'none');
+        }
+    }
+</script>
+{% if messages|length > 0 %}
+    <div id="popup-message-background" class="popup-message-background">
+        <div class="popup-message" id="popup-message">
+            <div class="popup-product-close" id="popup-message-close">Zamknij X</div>
+            <div class="popup-message-main">
+                <div class="popup-message-content">
+                    {% for message in messages  %}
+                            {{message}}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        closePopUp('#popup-message-background', true);
+        setTimeout(function () {
+            closePopUp('#popup-message-background', false);
+        }, 3000);
+
+        $('body').click((e)=> {
+            if(e.target.closest("#popup-message")===null) {
+              if ($('#popup-message-background').css('display') === 'block')
+                closePopUp('#popup-message-background', false);
+            }
+        })
+
+    </script>
+{% endif %}
+    <div id="popup-message-background2" class="popup-message-background">
+        <div class="popup-message" id="popup-message2">
+            <div class="popup-product-close" id="popup-message-close2">Zamknij X</div>
+            <div class="popup-message-main">
+                <div class="popup-message-content" id="popup-message-content2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $('body').click((e)=> {
+            if(e.target.closest("#popup-message2")===null) {
+              if ($('#popup-message-background2').css('display') === 'block')
+                closePopUp('#popup-message-background2', false);
+            }
+        })
+
+        $('#popup-message-close2').click(function() {
+            closePopUp('#popup-message-background2');
+        });
+
+    </script>

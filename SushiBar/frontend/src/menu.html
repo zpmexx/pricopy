@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Panel administratora</title>
+		<link href="style.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>		
+		<script src="js/main.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<nav class="side-navbar">
+			<div class="side-navbar-wrapper">
+				<div class="sidenav-header d-flex align-items-center justify-content-center flex-column">
+					<div class="sidenav-header-inner text-center">
+						<span>Witaj User!</span>
+					</div>
+					<img src="images/profil_1.jpg" alt="person" class="img-fluid rounded-circle">
+				</div>
+				<div class="main-menu">
+					<!--<h5 class="sidenav-heading">Menu</h5>-->
+					<ul id="side-main-menu" class="side-menu list-unstyled" > 
+						<li><a id="main-nav" href="">Menu</a></li>
+						<li><a href="index.html">Zamówienia</a></li>
+						<li><a href="index.html">Menu</a></li>
+						<li><a href="index.html">Komentarze i opinie</a></li>
+						<li><a href="index.html">Promocje i rabaty</a></li>
+						<li><a href="index.html">Klienci</a></li>
+						<li><a href="index.html">Chat</a></li>
+						<li><a href="index.html">Aktualności</a></li>
+						<li><a href="index.html">Rezerwacje</a></li>
+						<li><a href="index.html">Eventy</a></li>
+						<li><a href="index.html">Baner</a></li>
+						<li><a href="index.html">Galeria</a></li>
+						<li><a href="index.html">O NAS</a></li>
+						<li><a href="index.html">Kontakt</a></li>
+						<li><a href="index.html">Użytkownicy systemu</a></li>
+						<li><a href="index.html">Ustawienia</a></li>
+						<li><a href="index.html">Statystyki</a></li>
+						<li><a href="index.html">Pomoc</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="page">
+			<header class="header">
+				<nav class="navbar">
+					<div class="container-fluid">
+						<ul class="main-chapter">
+							<li class="main-chapter-item">
+								<a href="#" id="main-nav2">Panel Administratora > </a>
+							</li>
+							<!--<li class="main-chapter-item active">
+							</li>-->
+						</ul>
+						<!--<div class="navbar-holder d-flex align-items-center justify-content-between">
+							<div class="navbar-header">
+								<span>Panel Administratora</span>
+							</div>
+						</div>-->
+					</div>
+				</nav>
+			</header>
+			<div class="page-menu">
+				<div class="container-fluid">
+					<div class="flex-row d-flex">
+						<div class="col-2">
+							<div>
+								<a>Menu</a>
+							</div>
+						</div>
+						<div class="page-menu-nag d-flex align-items-center justify-content-between col-10">
+							<div class="page-menu-opt">
+								<select name="devices">
+									<option value="menu">menu</option>
+									<option value="menu2">menu2</option>
+									<option value="menu3">menu3</option>
+								</select>
+							</div>
+							<div class="page-menu-opt1">
+								<select name="devices">
+									<option value="opcje">Opcje</option>
+									<option value="opcje2">Opcje2</option>
+									<option value="opcje3">Opcje3</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-menu-board">
+				<div class="container-fluid">
+					<div class="page-menu-board-category row flex-row d-flex">
+						<div class="category-nag-cat col-md-2">
+							<div class="category-nag">
+								<a>Kategorie</a>
+							</div>
+							<ul class="category-dan list-unstyled">
+								<li><a href="#">Przystawki</a></li>
+								<li><a href="#">Maksilimin</a></li>
+								<li><a href="#">Druga karta menu</a></li>
+								<li><a href="#">Szef poleca</a></li>
+							</ul>
+						</div>
+						<div class="wrapper col-md-10">
+							<div class="wrapper-search">
+								<input class="wrapper-search-input" type="search" name="search" placeholder="Szukaj dania"/>
+							</div>
+							<div class="wrapper-between d-flex align-items-center justify-content-between">
+								<div class="wrapper-filter">
+									<a>Filtruj wgl.</a>
+									<select name="devices" style="margin-left: 5px;">
+										<option value="filtr">brak zdjecia</option>
+										<option value="filtr2">filtr2</option>
+										<option value="filtr3">filtr3</option>
+									</select>
+								</div>
+								<div class="wrapper-filter-rolling">
+									<a>Zwin/Rozwin wszystkie</a>
+								</div>
+							</div>
+							<div class="wrapper-select">
+								<input type="submit" value="Zaznacz wszystkie"><a>Zaznaczone</a>
+								<select name="devices" style="margin-left: 5px;">
+									<option value="select">kopiuj</option>
+									<option value="select2">usun</option>
+									<option value="select3">select3</option>
+								</select>
+							</div>
+							<div class="wrapper-menu">
+
+									<div class="wrapper-menu-between d-flex align-items-center justify-content-between">
+										<div class="wrapper-menu-nag-input">
+											<input type="checkbox" name="service" value="przystawki">Przystawki
+										</div>
+										<div class="wrapper-menu-nag-option">
+											<div class="wrapper-menu-nag-rolling"><a>Zwin</a></div>
+											<div class="wrapper-menu-nag-select">
+												<select name="devices">
+													<option value="opcje">opcje</option>
+													<option value="opcje2">opcje</option>
+													<option value="opcje3">opcje</option>
+												</select>
+											</div>
+										</div>
+									</div>
+
+							</div>
+							<div class="wrapper-menu-dan">
+								<div class="wrapper-menu-between d-flex align-items-center justify-content-between">
+									<div class="wrapper-menu-board">
+										<div class="wrapper-menu-dan-check">
+											<input type="checkbox" name="service" value="salatka">
+										</div>
+										<div class="wrapper-menu-dan-images">
+											<img src="images/logo.jpg"/>
+										</div>
+										<div class="wrapper-menu-dan-text">
+											<a>Salatka z alg</a>
+										</div>
+									</div>
+									<div class="wrapper-menu-board">
+										<div class="wrapper-menu-dan-price">
+											<a>12,00</a>
+										</div>
+										<div class="wrapper-menu-dan-option">
+											<select name="devices">
+												<option value="opcje">opcje</option>
+												<option value="opcje2">opcje</option>
+												<option value="opcje3">opcje</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>

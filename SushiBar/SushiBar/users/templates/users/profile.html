@@ -1,0 +1,78 @@
+<!doctype html>
+{% load crispy_forms_tags %}
+{% load static %}
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+    <link rel ="stylesheet" href ="{% static 'users/style.css' %}">
+        <title> Profil </title>
+        <div class="content-wrapper login-box-content-wrapper">
+          <div class="login-box" style="width: 100%">
+              {% include 'menu/popup_message.html' %}
+            <h1>{{user.username}}</h1>
+            {% comment %} konieczne jest podanie .url w celu osiągnięcia samego zdjecia, nie atrybutu obiektu {% endcomment %}
+            {# <img src="{{user.profile.image.url}}"> #}
+
+            {% comment %} enctype konieczne przy przesyłaniu przez formularz zdjęc {% endcomment %}
+            <form method = "POST" enctype="multipart/form-data"  class="login-box-form profile-form flex-column-content">
+                <div class="flex-row-raw flex-justify-content-space-around flex-wrap label-margin-bottom--5">
+                    <div class="profile-form-box">
+                        <header>Dane użytkownika:</header>
+                        {% csrf_token %}
+                        <div class="container">
+        <!--                            <div class="flex-row-raw flex-align-items-center profile-field">-->
+        <!--                                <label>Avatar:</label><div class="login-box-user-profile-avatar-img" style="background-image: url('{{user.profile.image.url}}')"></div>-->
+        <!--                            </div>-->
+        <!--                            <div class="flex-row-raw flex-align-items-center profile-field">-->
+        <!--                                <div class=""> {{profile_form.image}}</div>-->
+        <!--                            </div>-->
+                            <div class="profile-field-box">
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Nazwa użytkownika:</label><div class="">{{user_form.username}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Email:</label><div class="">{{user_form.email}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Numer telefonu:</label><div class="">{{user_form.phone_number}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-form-box">
+                        <header>Dane adresowe:</header>
+                        <div class="container">
+                            <div class="profile-field-box">
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Imię i Nazwisko:</label><div class="">{{address_form.user_first_last_name}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Ulica:</label><div class="">{{address_form.street}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Numer domu:</label><div class="">{{address_form.house_number}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Numer miekszania:</label><div class="">{{address_form.flat_number}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Kod pocztowy:</label><div class="">{{address_form.postal_code}}</div>
+                                </div>
+                                <div class="flex-column-content profile-field-margin">
+                                    <label>Miasto:</label><div class="">{{address_form.city}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="margin-left-5 margin-right-5 margin-bottom-5">
+                    <input type="submit" value="Zaktualizuj" name="addressbutton" class="product-button">
+                </div>
+            </form>
+            {% comment %} {{user_info.email}} {% endcomment %}
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

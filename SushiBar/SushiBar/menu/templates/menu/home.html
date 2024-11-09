@@ -1,0 +1,576 @@
+{% load static %}
+
+<!doctype html>
+<html>
+    <body>
+
+    {% comment %} wczytywanie templatów z global static folder {% endcomment %}
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo(0, scrollpos);
+            {% if user.is_authenticated  %}
+                getUserCart();
+                $(document).on("userCartLoaded", (event, userCart) => {
+                    listUserCart(userCart);
+                });
+            {% endif %}
+            //$(window).scrollTo(0, scrollpos);
+        });
+
+        var popupMessageContent2Timer = null;
+
+        function addItemWithPopup(idItem, quality) {
+            setItemUserCart(idItem, quality).then(() => {
+                    $('#popup-message-content2').html("Pomyślnie dodano produkt.");
+                    closePopUp('#popup-message-background2', true);
+                    if (popupMessageContent2Timer!=null)
+                        clearTimeout(popupMessageContent2Timer);
+
+                      popupMessageContent2Timer = setTimeout(function () {
+                        closePopUp('#popup-message-background2', false);
+                        $('#popup-message-content2').html("");
+                    }, 1000);
+            }).catch(() => {});
+
+        }
+    </script>
+
+    <title>Menu</title>
+
+    {% comment %} listowanie wszystkich obiektów "news" - atkualność z bazy danych {% endcomment %}
+
+    {% include 'menu/popup_message.html' %}
+
+    <div class="popup-product-background" id="popup-product-background">
+        <div class="popup-product" id="popup-product">
+            <div class="popup-product-main">
+                <div class="popup-product-close" id="popup-product-close">Zamknij X</div>
+                <div class="popup-product-header-box">
+                    <div class="popup-product-header" id="popup-product-header"></div>
+                </div>
+                <div class="popup-product-content">
+                    <div class="popup-product-left">
+                        <div class="popup-product-img" id="popup-product-img"></div>
+                        <div class="popup-product-rating" id="popup-product-rating"></div>
+                    </div>
+                    <div class="popup-product-right" id="popup-product-right">
+                        <div class="popup-product-description" id="popup-product-description">
+                            <div class="popup-product-description-header">Opis</div>
+                            <div class="popup-product-description-content" id="popup-product-description-content"></div>
+                        </div>
+                        <div class="popup-product-ingredients" id="popup-product-ingredients">
+                            <div class="popup-product-ingredients-header">Składniki</div>
+                            <div class="popup-product-ingredients-content">
+                                <ul id="popup-product-ingredients-ul">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="popup-product-allergens" id="popup-product-allergens">
+                            <div class="popup-product-allergens-header">Alergeny</div>
+                            <div class="popup-product-allergen">
+                                <img class="popup-product-allergens-img" src="{% static 'images\alergeny\jajko.png' %}">
+                                <div class="popup-product-allergens-title">JAJKO</div>
+                            </div>
+                            <div class="popup-product-allergen">
+                                <img class="popup-product-allergens-img" src="{% static 'images\alergeny\jajko.png' %}">
+                                <div class="popup-product-allergens-title">JAJKO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-product-footer" id="popup-product-footer">
+                <div class="popup-product-footer-item popup-product-footer-left" style="color: black">
+                        Ilość w koszyku
+                </div>
+                <div class="popup-product-footer-item popup-product-footer-left">
+                    <div class="popup-product-quantity-box">
+                        <button class="popup-product-decrease" id="popup-product-decrease">-</button><!--
+                        --><div class="popup-product-quantity-block"><!--
+                        --><input type="number" name="popup-product-quantity" value="0" step="1" min="0" max="100" id="popup-product-quantity"/></div><!--
+                        --><button class="popup-product-increase" id="popup-product-increase">+</button>
+                    </div>
+                </div>
+                <div class="popup-product-footer-item popup-product-footer-middle">
+                    <div class="popup-product-price-box">
+                        <div id="popup-product-quantity-price"></div> <div class="popup-product-price-old" id="popup-product-price-old"> </div><div class="popup-product-price" id="popup-product-price"></div>
+                    </div>
+                </div>
+<!--                <div class="popup-product-footer-item popup-product-footer-right">-->
+<!--                    <div class="popup-product-add-cart-box">-->
+<!--                        <a id="popup-product-add-cart-href">-->
+<!--                        <input type="hidden" id="popup-product-slug"/>-->
+<!--                        <button class="product-button">dodaj do koszyka</button></a>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper" style="margin: 0;">
+        <div class="content-wrapper-header-box">
+            <header>MENU</header>
+        </div>
+        {% include 'restaurant_status.html' %}
+        <div class="menu-flex">
+            <div class="flex-row menu-category-box" id="menu-category-box">
+                <div class="menu-category-header" id="menu-category-header">
+                    Karta menu
+                </div>
+                <div class="menu-category-content" id="menu-category-content">
+                    <ul>
+                        {% for category in categories  %}
+                            <li><button onclick="myScrollTo('#Category{{category.id}}')">{{category.name}}</button></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="content-wrapper">
+                <section class="flex-column-content" style="margin-top: 0; padding: 10px;">
+
+                    <div class="mob-menu-category-box-pos" id="mob-menu-category-box-pos">
+                        <div class="mob-menu-category-box" id="mob-menu-category-box">
+                            <div class="mob-menu-category-header" id="mob-menu-category-header">
+                                <div class="mob-menu-category-header-img" id="mob-menu-category-header-img"></div><div class="mob-menu-category-header-text" id="mob-menu-category-header-text">Pokaż kartę menu</div>
+                            </div>
+                            <div class="mob-menu-category-list" id="mob-menu-category-list">
+                                {% for category in categories  %}
+                                    <button class="mob-menu-category" id="mob-menu-Category{{category.id}}" onclick="myScrollToMob('#Category{{category.id}}')">
+                                        {{category.name}}
+                                    </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                {% for category in categories  %}
+                    <div class="category" id="Category{{category.id}}">
+                        {{category.name}}
+                    </div>
+                        <div class="flex-row-content flex-product-justify">
+                        {% for product in category.product_set.all %}
+                            <div class="product-box">
+                                <div class="product-click" id="product-click" onclick="showPopUp('{{product.slug}}')">
+                                    <div>
+                                        {% if product.is_promoted == True %}
+                                            <div class="product-promotion-icon-mob">PROMOCJA</div>
+                                        {% endif %}
+                                        <img class="product-img" src="/media/{{product.image}}">
+                                    </div>
+                                    <div class="product-img-div" style="background-image: url(/media/{{product.image}})">
+                                        {% if product.is_promoted == True %}
+                                            <div class="product-promotion-icon">PROMOCJA</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-text">
+                                        <div class="product-name">{{product.name}}</div>
+                                        {% if product.is_promoted == True %}
+                                        <div class="product-price product-price-old">{{product.price}}zł</div>
+                                        <div class="product-price">{{product.promotion_price}}zł</div>
+                                        {% else %}
+                                        <div class="product-price">{{product.price}}zł</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+<!--                                <a href="{% url 'menu:add_to_cart' product.slug %}">-->
+                                <button class="product-button" onclick="addItemWithPopup({{ product.id }}, 1)">dodaj do koszyka</button>
+<!--                                </a>-->
+                            </div>
+                        {% endfor %}
+                        </div>
+                {% endfor %}
+                {% for order in orders  %}
+                <p>{{order.get_total_price}}</p>
+                {% endfor %}
+            </section>
+            </div>
+            <div class="flex-row menu-category-box menu-cart-box" id="menu-cart-box">
+                    <div class="menu-category-header menu-cart-header" id="menu-cart-header">
+                        Twoje zamówienie
+                    </div>
+                    <div class="menu-category-content" id="menu-cart-content">
+                        {% comment %}
+                            {% for item in user_items %}
+                                    <div class="menu-cart-product">
+                                        <div class="menu-cart-product-left">
+                                            <div class="menu-cart-product-img" style="background-image: url('/media/{{item.product.image}}')"></div>
+                                            <div class="menu-cart-product-name">{{item.quantity}}x {{item.product.name}}</div>
+                                        </div>
+                                        <div class="menu-cart-product-quantity">
+                                            <div class="menu-cart-product-price">{{item.priceXquantity}} zł</div>
+                                            <div class="menu-cart-product-change-quantity">
+                                                <a href="{% url 'menu:product_quantity_increase' item.product.slug %}">+</a>
+                                                <a href="{% url 'menu:product_quantity_decrease' item.product.slug %}">-</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                        {% endcomment %}
+                    </div>
+                    <div id="menu-cart-content-last">
+                        <div class="menu-cart-product-spacer"></div>
+                        <div class="menu-category-content">
+                            <div class="menu-cart-product">
+                                <div class="menu-cart-product-left">
+                                    Dostawa:
+                                </div>
+                                <div class="menu-cart-product-quantity">
+                                        {{bar_informations.delivery_cost}}
+                                </div>
+                            </div>
+                            <div class="menu-cart-product">
+                                <div class="menu-cart-product-left">
+                                    Razem:
+                                </div>
+                                <div class="menu-cart-product-quantity" id="menu-cart-product-quantity">
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'user_cart' %}">
+                        <button class="product-button">Zamów</button></a>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    {% include 'footer.html' %}
+    <script>
+        var menu_X_box_margin_top = {
+            'category': 50,
+            'cart': 50
+        };
+        var can_scroll = true;
+        $('#mob-menu-category-header').click(function() {
+            var display=$('#mob-menu-category-list').css('display') == 'block' ? 'none' : 'block';
+            $('#mob-menu-category-list').css('display', display);
+            if(display != 'block') {
+                $('#mob-menu-category-header').css('width', '177px');
+                $('#mob-menu-category-header-text').html("Pokaż kartę menu");
+                $('#mob-menu-category-header-img').css('transform', '');
+                //$('#Category1').css('margin-top', '30px');
+            }
+            else {
+                $('#mob-menu-category-header').css('width', '172px');
+                $('#mob-menu-category-header-text').html("ukryj kartę menu");
+                $('#mob-menu-category-header-img').css('transform', 'rotate(180deg)');
+                //$('#Category1').css('margin-top', $("#mob-menu-category-box").outerHeight()+30+58+'px');
+                //$('#Category1').css('margin-top', '60px');
+            }
+            //$(".mob-menu-category-list").stop().animate({"display": display}, "fast" );
+        });
+
+
+
+        let iterations=0;
+        // console.log("Scroll pos: "+$(window).scrollTop());
+        function checkMenuCategoryHeight(up, id){
+            let menu_category_box_rect = $("#menu-"+id+"-box")[0].getBoundingClientRect();
+            let menu_category_height = $("#menu-"+id+"-header").outerHeight()+$("#menu-"+id+"-content").outerHeight();
+            if(id=="cart") {
+                menu_category_height += $("#menu-cart-content-last").outerHeight();
+            }
+            //$("#menu-category-content").css("{position: }");
+            let menu_category_box_calc = menu_category_box_rect.top + menu_category_height + parseInt($("#menu-"+id+"-box").css("margin-bottom")) + $(window).scrollTop();
+            let menu_category_max_height = window.innerHeight-menu_category_box_rect.top-$("#menu-"+id+"-header").outerHeight()-parseInt($("#menu-"+id+"-box").css("margin-bottom"));
+            if(id=="cart") {
+                menu_category_max_height -= $("#menu-cart-content-last").outerHeight();
+            }
+            // console.log("menu_category_height: "+menu_category_height);
+            // console.log("window.innerHeight: "+window.innerHeight);
+            // console.log("menu_category_box_calc: "+menu_category_box_calc);
+            // if(id=="cart") {
+            //     console.log("menu_category_max_height: "+menu_category_max_height);
+            // }
+            // console.log("Scroll pos: "+$(window).scrollTop());
+            // console.log("maasd: " + ($("#menu-category-header").outerHeight() + parseInt($("#menu-category-box").css("margin-bottom")) + $("#nav-logo").outerHeight() + 50))    ;
+            if(iterations>10000) {
+                return false;
+            }
+            ++iterations;
+            if(window.innerHeight<$("#menu-"+id+"-header").outerHeight() + parseInt($("#menu-"+id+"-box").css("margin-bottom")) + $("#nav-logo").outerHeight() + 50)
+                return false;
+            if (menu_category_box_calc > window.innerHeight) {
+                //console.log("Down..");
+                if (menu_X_box_margin_top[id] > 0) {
+                    --menu_X_box_margin_top[id];
+                    $("#menu-"+id+"-box").css({"margin-top": menu_X_box_margin_top[id]})
+                } else {
+                    if (menu_category_height > menu_category_max_height) {
+                        $("#menu-"+id+"-content").css({"max-height": menu_category_max_height + "px"});
+                    }
+                }
+                //can_scroll=false;
+                return true;
+            } else if(($("#menu-"+id+"-box").scrollWidth>0 || menu_X_box_margin_top[id]<100) && menu_category_box_calc<window.innerHeight) {
+                if ($("#menu-"+id+"-box").scrollWidth>0 && menu_category_height < menu_category_max_height) {
+                        $("#menu-"+id+"-content").css({"max-height": menu_category_max_height + "px"});
+                    }
+                else {
+                    if (menu_X_box_margin_top[id]<100) {
+                        $("#menu-"+id+"-content").css({"max-height": ""});
+                        ++menu_X_box_margin_top[id];
+                        $("#menu-"+id+"-box").css({"margin-top": menu_X_box_margin_top[id]})
+                    }
+                }
+                return true;
+            }
+            iterations=0;
+            //can_scroll=true;  ;
+
+            return false;
+        }
+
+        //checkMenuCategoryHeight();
+        $(window).on('load', function(){
+            $('#popup-product').css("max-height", window.innerHeight-$('#mob-footer').outerHeight(true)-$('#nav-logo').outerHeight(true));
+            if($('#menu-category-box').css("display") != "none") {
+                while(checkMenuCategoryHeight(false, "category"));
+                while(checkMenuCategoryHeight(false, "cart"));
+                scrollMenuBoxes();
+            }
+        });
+
+        var rtime;
+        var timeout = false;
+        var delta = 500;
+        var lastHeight = window.innerHeight;
+        $(window).resize(function() {
+            rtime = new Date();
+            if (timeout === false) {
+                timeout = true;
+                setTimeout(resizeend, delta);
+            }
+        });
+
+        function resizeend() {
+            if (new Date() - rtime < delta) {
+                setTimeout(resizeend, delta);
+            } else {
+                timeout = false;
+                $('#popup-product').css("max-height", window.innerHeight-$('#mob-footer').outerHeight(true)-$('#nav-logo').outerHeight(true));
+                if($('#menu-category-box').css("display") != "none") {
+                        //console.log("Checking...");
+                        //console.log("lastHeight: " + lastHeight);
+                        //console.log("windowHeight: " + window.innerHeight);
+                        iterations = 0;
+                        if (window.innerHeight < lastHeight) {
+                            lastHeight = window.innerHeight;
+                            while (checkMenuCategoryHeight(false, "category")) ;
+                            while(checkMenuCategoryHeight(false, "cart"));
+                        } else if (window.innerHeight > lastHeight) {
+                            lastHeight = window.innerHeight;
+                            while (checkMenuCategoryHeight(true, "category")) ;
+                            while (checkMenuCategoryHeight(true, "cart")) ;
+                        }
+                        //$("#menu-category-box").css({"margin-top": ($(window).scrollTop() + menu_category_box_margin_top) + "px"});
+                        //console.log("After checking...");
+                }
+            }
+        }
+
+        function scrollMenuBoxes() {
+            // console.log("Nav-logo height: "+$("#nav-logo").outerHeight());
+            // console.log("InnerHeight: "+window.innerHeight);
+            // console.log("#footer: "+$("#footer").outerHeight());
+            let footer_rect = $("#footer")[0].getBoundingClientRect();
+            //let menu_category_box_rect = $("#menu-category-box")[0].getBoundingClientRect();
+            //console.log("calc: "+(menu_category_box_rect.top+$("#menu-category-header").outerHeight()+$("#menu-category-content").outerHeight()));
+            //let menu_category_box_calc = menu_category_box_rect.top+$("#menu-category-box").outerHeight()+ parseInt($("#menu-category-box").css("margin-bottom"));
+            // console.log("calc: "+menu_category_box_calc);
+            // console.log("#footer-offset: "+footer_rect.top);
+            //let margin_top =  window.innerHeight - ($("#footer").outerHeight() + $("#nav-logo").outerHeight()) - menu_category_height;
+            // console.log("#menu-category-high: "+menu_category_height);
+            // console.log("margin "+($(window).scrollTop()+100));
+            // console.log("fixed margin "+margin_top);
+            // console.log("Scroll pos: "+$(window).scrollTop());
+            // console.log("footer-up: "+(window.innerHeight-footer_rect.top));
+
+            let menu_category_box_rect = $("#menu-category-box")[0].getBoundingClientRect();
+            let menu_category_height = $("#menu-category-header").outerHeight()+$("#menu-category-content").outerHeight();
+            let menu_category_bottom_stick = menu_category_box_rect.top + menu_category_height + parseInt($("#menu-category-box").css("margin-bottom")) + 10;
+
+
+            let menu_cart_box_rect = $("#menu-cart-box")[0].getBoundingClientRect();
+            let menu_cart_height = $("#menu-cart-header").outerHeight()+$("#menu-cart-content").outerHeight()+$("#menu-cart-content-last").outerHeight();
+            let menu_cart_bottom_stick = menu_cart_box_rect.top + menu_cart_height + parseInt($("#menu-cart-box").css("margin-bottom")) + 10;
+
+            // console.log("footer_rect.top: " + footer_rect.top);
+
+            let masterBottomStick = menu_category_bottom_stick;
+
+            if(menu_category_height<menu_cart_height) {
+                masterBottomStick = menu_cart_bottom_stick;
+            }
+            if (footer_rect.top - masterBottomStick > 0) {
+                // console.log("ss1");
+                $("#menu-category-box").css({"margin-top": ($(window).scrollTop() + menu_X_box_margin_top['category']) + "px"});
+                $("#menu-cart-box").css({"margin-top": ($(window).scrollTop() + menu_X_box_margin_top['cart']) + "px"});
+            }
+            else if (window.innerHeight - footer_rect.top < -10) {
+                // console.log("ss2");
+                $("#menu-category-box").css({"margin-top": ($(window).scrollTop() + menu_X_box_margin_top['category']) + "px"});
+                $("#menu-cart-box").css({"margin-top": ($(window).scrollTop() + menu_X_box_margin_top['cart']) + "px"});
+            }
+        }
+
+        $(window).scroll(function(){
+            localStorage.setItem('scrollpos', window.scrollY);
+
+            if($('#menu-category-box').css("display") != "none") {
+                scrollMenuBoxes();
+            }
+    });
+
+
+        function changePopupValueProductQuantity(idItem, val) {
+            setItemUserCart(idItem, val).then((data) => {
+                let was = false;
+                data.cart_items.map(
+                    (element, index, array) => {
+                        let productid = element.product.id;
+                        if( productid == idItem) {
+                            was = true;
+                            changePopupValueProductQuantityElement(element.quantity);
+                        }
+                });
+                if (!was)
+                changePopupValueProductQuantityElement(0);
+            }).catch(() => {
+                changePopupValueProductQuantityElement(0);
+            });
+        }
+
+        function changePopupValueProductQuantityElement(val) {
+                $('#popup-product-quantity').val(val);
+                if(val>1)
+                    $('#popup-product-quantity-price').html("x");
+                else
+                    $('#popup-product-quantity-price').html("");
+        }
+
+        var popupValueProductQuantityTimer = undefined;
+
+        function setPopupValueProductQuantity(e, id, val) {
+            // if(e.key === "ArrowUp" || e.key === "ArrowDown") {
+            if (val != "" && val > -1 && val < 100) {
+                if (popupValueProductQuantityTimer !== undefined)
+                    clearTimeout(popupValueProductQuantityTimer);
+                popupValueProductQuantityTimer = setTimeout(() => {
+                    getUserCartItem(id).then((itemData) => {
+                        val = e.target.value-itemData.quantity;
+                        setItemUserCart(id, val).catch(() => {});
+                    }).catch(() => {
+                        setItemUserCart(id, val).catch(() => {});
+                    })
+                }, 500)
+            }
+            // else {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            // }
+        }
+
+        function showPopUp(product) {
+            $.ajax({
+                url: "/api/menu/"+product
+            }).then(function(data) {
+                let anydata = false;
+                if(data.description.length<=0)
+                    $('.popup-product-description').css('display', 'none');
+                else {
+                    anydata = true;
+                    $('.popup-product-description').css('display', 'block');
+                }
+
+                if(data.ingredients.length<=0)
+                    $('.popup-product-ingredients').css('display', 'none');
+                else {
+                    anydata = true;
+                    $('.popup-product-ingredients').css('display', 'block');
+                    var ingrs='';
+                    for (var i =0; i<data.ingredients.length; ++i)
+                    {
+                        ingrs+=('<li>'+data.ingredients[i].name+'</li>')
+                    }
+                    $('#popup-product-ingredients-ul').html(ingrs);
+                }
+
+                if(data.allergens == null || data.allergens.length<=0)
+                    $('.popup-product-allergens').css('display', 'none');
+                else {
+                    anydata = true;
+                    $('.popup-product-allergens').css('display', 'block');
+                }
+
+               if(!anydata)
+                   $('.popup-product-right').css('display', 'none');
+               else
+                   $('.popup-product-right').css('display', 'unset');
+
+               $('.popup-product-description-content').html(data.description);
+               $('.popup-product-header').html(data.name);
+               $('.popup-product-img').css('background-image', 'url(\''+data.image+'\')');
+               $('#popup-product-price-old').css('display', 'none');
+               if(data.is_promoted) {
+                    $('#popup-product-price-old').css('display', 'unset');
+                    $('#popup-product-price-old').html(data.price+" zł");
+                    $('#popup-product-price').html(data.promotion_price+" zł");
+               }
+               else
+                    $('#popup-product-price').html(data.price+" zł");
+               $('#popup-product-slug').val(data.slug);
+               //$('#popup-product-add-cart-href').attr({"href": "add_to_cart/"+data.slug});
+                getUserCartItem(data.id).then((itemData) => {
+                    $('#popup-product-decrease').attr({"onClick": 'changePopupValueProductQuantity('+data.id+', -1)'});
+                    $('#popup-product-increase').attr({"onClick": 'changePopupValueProductQuantity('+data.id+', 1)'});
+                    $('#popup-product-quantity').attr({"onKeyup": 'setPopupValueProductQuantity(event, '+data.id+', this.value)'});
+                    changePopupValueProductQuantityElement(itemData.quantity);
+                }).catch(() => {
+                    $('#popup-product-decrease').attr({"onClick": 'changePopupValueProductQuantity('+data.id+', -1)'});
+                    $('#popup-product-increase').attr({"onClick": 'changePopupValueProductQuantity('+data.id+', 1)'});
+                    $('#popup-product-quantity').attr({"onKeyup": 'setPopupValueProductQuantity(event, '+data.id+', this.value)'});
+                    changePopupValueProductQuantityElement(0);
+                })
+               //{% comment %} Definicja funkcji w pliku popup_message.html {% endcomment %}
+               closePopUp('#popup-product-background');
+            });
+        }
+
+        $('#popup-product-close').click(function() {
+            closePopUp('#popup-product-background');
+        });
+
+        $('#popup-product-background').click(function(e) {
+            if(e.target.id=="popup-product-background")
+                closePopUp('#popup-product-background');
+        });
+
+        $('#popup-message-close').click(function() {
+            closePopUp('#popup-message-background');
+        });
+
+        $('#popup-message-background').click(function(e) {
+            if(e.target.id=="popup-message-background")
+                closePopUp('#popup-message-background');
+        });
+
+        function myScrollToMob(id){
+            var heightHeader = $("#header").outerHeight()<$("#nav-logo").outerHeight() ? $("#nav-logo").outerHeight() : $("#nav-logo").outerHeight(); //gets height of header
+            var heightCategoryBox = $("#mob-menu-category-box-pos").outerHeight();
+            $('html, body').animate({
+                scrollTop: $(id).offset().top-(heightHeader+heightCategoryBox)
+            }, 200);
+        };
+
+        function myScrollTo(id){
+            var heightHeader = $("#header").outerHeight()<$("#nav-logo").outerHeight() ? $("#nav-logo").outerHeight() : $("#nav-logo").outerHeight(); //gets height of header
+            $('html, body').animate({
+                scrollTop: $(id).offset().top-(heightHeader)
+            }, 200);
+        };
+    </script>
+
+    </body>
+</html>

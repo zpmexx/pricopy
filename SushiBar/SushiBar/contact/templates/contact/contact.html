@@ -1,0 +1,115 @@
+{% load crispy_forms_tags %}
+<!doctype html>
+<html>
+    <body>
+        {% include 'head.html' %}
+        {% include 'navbar.html' %}
+
+        {% for message in messages %}
+            {% if 'contact' in message.tags %}
+                <div class="popup-product-background" id="popup-product-background">
+                    <div class="popup-product" id="popup-product">
+                        <div class="popup-product-close" id="popup-product-close">Zamknij X</div>
+                        <div class="popup-product-header-box">
+                            <div class="popup-product-header" id="popup-product-header">Formularz kontaktowy zgłoszenie</div>
+                        </div>
+                        <div class="popup-product-content">
+                            <div class="popup-product-description" id="popup-product-description">
+                                <div class="popup-product-description-content" id="popup-product-description-content">
+                                    {{message}}  {% comment %} wiadomosc po udanym wysłaniu formularza {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function showPopUp() {
+                        $('#popup-product-background').css('display', 'block');
+                    }
+
+                    $('#popup-product-close').click(function() {
+                        $('#popup-product-background').css('display', 'none');
+                    });
+
+                    $('#popup-product-background').click(function(e) {
+                        if(e.target.id=="popup-product-background")
+                            $('#popup-product-background').css('display', 'none');
+                    });
+                    showPopUp();
+                </script>
+           {% endif %}
+        {% endfor %}
+        <title> Kontakt </title>
+        <div class="content-wrapper contact-wrapper">
+            <div class="content-wrapper-header-box">
+                <header>Kontakt</header>
+            </div>
+            <section class="flex-column-content">
+                <div class="flex-row-content">
+                    <div class="flex-column contact-flex-column">
+                        <form method = "POST" action = "" class="flex-column-content">
+                           {% csrf_token %}
+                            {{form.name}}
+                            {{form.email}}
+                            {{form.title}}
+                            {{form.content}}
+                            <p class="form-text wrapped" style="height: 64px">
+                                FORMULARZ KONTAKTOWY <br/>
+                                Informujemy, iż Administratorem Pana/Pani danych osobowych jest Yakitori Grill Bar,  adres e-mail: kontakt@yakitori-grill.pl<br/>
+                                a) Pana/Pani dane przetwarzane będą w odpowiedzi na Państwa zapytanie skierowane do Administratora danych.<br/>
+                                b) Pani/Pana dane zostaną udostępnione pracownikom i osobom upoważnionym przez Administratora jedynie w celu realizacji Państwa prośby o kontakt<br/>
+                                c) Pani/Pana dane przechowywane będą do momentu zakończenia komunikacji zainicjowanej przez wypełnienie niniejszego formularza<br/>
+                                d) Przysługuje Pani/Panu prawo dostępu do Pani/Pana danych osobowych, ich sprostowania, usunięcia lub ograniczenia przetwarzania, prawo do przenoszenia danych do innego administratora.<br/>
+                                e) Przysługuje Pani/Panu prawo wniesienia skargi do Organu Nadzorczego sprawującego kontrolę nad legalnością i prawidłowością przetwarzania danych osobowych.<br/>
+                                f) Pani/Pana dane nie będą przekazywane poza obszar UE ani do żadnych organizacji międzynarodowych.<br/>
+                                g) Pani/Pana dane nie będą podlegały profilowaniu ani automatycznemu podejmowaniu decyzji<br/>
+                            </p>
+                            <input type="submit" value="Wyślij" class="form-submit product-button">
+                        </form>
+                        <p class="form-text">* pola wymagane</p>
+                    </div>
+                    <div class="flex-column  contact-flex-column">
+                        <div class="flex-column-content">
+                            <div class="flex-row contact-text">
+                                {% if bar_informations %}
+                                    <p>{{bar_informations.street}}</p>
+                                    <p>{{bar_informations.code}} {{bar_informations.city}}</p>
+                                    <p>TEL. {{bar_informations.number}}</p>
+                                    <a href="mailto:{{info.email}}" style="text-align: center;">{{bar_informations.email}}</a>
+                                {% else %}
+                                    <p>Brak modelu danych! Dodaj w panelu admina.</p>
+                                {% endif %}
+                            </div>
+                            <div class="flex-row contact-text contact-hour">
+                                <h1>Godziny otwarcia restauracji</h1>
+                                {% if opening_hours %}
+                                    {% for k,v in final_dictionary.items %}
+                                        <p>{{k}}: {{v}}
+                                    {% endfor %}
+                                {% else %}
+                                    <p>Brak dodanych godzin otwarcia! Dodaj w panelu admina.</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex-row contact-text contact-hour">
+                                <h1>Godziny przyjmowania zamówień</h1>
+                                {% if realization_hours %}
+                                    {% for k,v in final_dictionary_realization_hours.items %}
+                                        <p>{{k}}: {{v}}
+                                    {% endfor %}
+                                {% else %}
+                                    <p>Brak dodanych godzin realizacji zamówień! Dodaj w panelu admina.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <iframe class="contact-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2435.15013645668!2d16.8870209160705!3d52.385828579789106!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470445849feb82d3%3A0xcbddd98098d9634e!2sYakitori%20Grill%20Bar!5e0!3m2!1spl!2spl!4v1591787509230!5m2!1spl!2spl" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0" width="100%" height="422px"></iframe>
+                </div>
+            </section>
+        </div>
+
+        {% include 'footer.html' %}
+    </body>
+</html>

@@ -1,0 +1,67 @@
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %} 
+<!doctype html>
+<html>
+  <body>
+  {% include 'head.html' %}
+  {% include 'navbar.html' %}
+    <title> Strona logowania </title>
+    <div class="content-wrapper">
+      <div class="login-box">
+        <a class="login-box-register login-box-noactive" href="{% url 'register' %}">Zarejestruj</a>
+        <a class="login-box-login" href="{% url 'login' %}">Zaloguj</a>
+        <form method="POST" class="login-box-form">
+        {# csrf_token wymagany przy wysyłaniu formularza metoda "POST" #}
+        {% csrf_token %}
+                    {% for message in messages %}
+                  {% if 'singup' in message.tags %}
+                    {{message}}  {% comment %} wiadomosc po udanym założeniu konta {% endcomment %}
+                  {% endif %}
+                {% endfor %}
+<!--          <div class="imgcontainer">-->
+<!--            <img src="{% static "users/avatar.jpg" %}" alt="Avatar" class="avatar">-->
+<!--          </div>-->
+
+          <div class="container">
+            <input type="text" placeholder="Podaj nazwe użytkownika" name="uname" required>
+
+            <input type="password" placeholder="Podaj hasło" name="psw" required>
+                {% for message in messages %}
+                  {% if 'bad_credentials' in message.tags %}
+                <div class="login-box-message">{{message}} {% comment %} wiadomosc nieudanej próbie zalogowania {% endcomment %}</div>
+                  {% endif %}
+                {% endfor %}
+            <button type="submit">Zaloguj</button>
+            {% comment %} <label>
+              <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label> {% endcomment %}
+          <div class="login-box-password-reset">
+            <a href="{% url 'password_reset' %}">Zapomniałeś hasła?</a>
+          </div>
+          </div>
+        </form>
+
+        <div class="login-box-login-as">
+          <div class="login-box-login-as-header">
+            Zaloguj przez:
+          </div>
+          <div class="login-box-login-as-socials">
+            <div class="login-box-login-as-social">
+              <a href="{% provider_login_url "facebook" method="oauth2" %}">
+                <div class="facebook"></div>
+              </a>
+            </div>
+
+            <div class="login-box-login-as-social">
+              <a href="{% provider_login_url "google" %}">
+                <div class="google"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'footer.html' %}
+  </body>
+  </html>

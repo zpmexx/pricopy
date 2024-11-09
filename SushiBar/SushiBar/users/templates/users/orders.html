@@ -1,0 +1,68 @@
+<!doctype html>
+{% load crispy_forms_tags %}
+{% load static %}
+{% load define_action %}
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+    <link rel ="stylesheet" href ="{% static 'users/style.css' %}">
+        <title> Lista zamówień </title>
+        {% include 'menu/popup_message.html' %}
+        <div class="content-wrapper login-box-content-wrapper">
+          <div class="login-box" style="width: 100%; padding-bottom: 5px">
+            <h1>Lista zamówień</h1>
+              {% if user_orders|length == 0 %}
+                Brak zamówień, dodaj produkty do koszyka na stronie z <a href="{% url 'menu:home' %}">ofertą</a> i złóż zamówienie.
+              {% else %}
+                  <div class="flex-column-content margin-5">
+                      <table class="mytable">
+                        <thead>
+                            <tr>
+                                <th class="mytable-hide">
+                                    Id
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Przedmioty
+                                </th>
+                                <th class="mytable-hide">
+                                    Uwagi
+                                </th>
+                                <th>
+                                    Kwota
+                                </th>
+                                <th>
+                                    Data zamówienia
+                                </th>
+                            </tr>
+                        </thead>
+                          <tbody>
+                            {% for order in user_orders %}
+                                <tr onclick="window.location.href='{% url 'zamowienie' order.orderId %}'">
+                                    <td class="mytable-hide">{{ order.orderId }}</td>
+                                    <td><div class="order-status-box border-color-{{ order.status }}">{{ order.statusStr }}</div></td>
+                                    <td>
+                                        {% comment %}
+                                            {% for index, product in order.get_ordered_products %}
+                                                {{ product.product_name }}{% if order.get_ordered_products|length > 1 and index < order.get_ordered_products|length|add:-1 %}, {% endif %}
+                                            {% endfor %}
+                                        {% endcomment %}
+                                        {{ order.get_ordered_productsStrTruncate }}
+                                    </td>
+                                    <td class="mytable-hide">{{ order.comments|truncatewords:4|truncatechars:30 }}</td>
+                                    <td>{{ order.get_total_price|floatformat:2 }} zł</td>
+                                    <td>{{ order.created|date:'d.m.Y H:i' }}</td>
+                                </tr>
+                            {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              {% endif %}
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

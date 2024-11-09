@@ -1,0 +1,94 @@
+<div class="header" id="header">
+  <nav class="navbar">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="navbar-main-page-link">
+          <a class="home-img" href="/"></a>
+          <a class="navbar-brand" href="/">Strona główna</a>
+        </div>
+        <div class="mob-navbar-menu" id="mob-navbar-menu">
+          <div class="mob-navbar-menu-burger"></div>
+          <div class="mob-navbar-menu-text">Menu</div>
+        </div>
+      </div>
+      <ul class="ul-nav-left">
+        <li><a href="{% url 'news:home' %}">Aktualności</a></li>
+<!--        <li><a href="#">Eventy</a></li>-->
+<!--        <li><a href="#">Galeria</a></li>-->
+        {% if user.is_authenticated and request.user.is_superuser %}
+          <li><a href="{% url 'admin:index' %}">Admin Panel</a></li>
+        {% endif %}
+
+      </ul>
+      <div class="nav-logo-box">
+          <a href="{% url 'main' %}">
+            <div class="nav-logo" id="nav-logo"></div>
+          </a>
+      </div>
+      <ul class="nav navbar-nav" id="ul-nav">
+        <div class="mob-navbar-header">
+          <a class="mob-home-img" href="/"></a>
+          <a class="mob-navbar-brand" href="/">Strona główna</a>
+        </div>
+        <!--<li><a href="{% url 'news:temporary_main' %}">Strona główna</a></li>-->
+
+        <li class="mob-display"><a href="{% url 'news:home' %}">Aktualności</a></li>
+        <li><a href="{% url 'about' %}">O nas</a></li>
+        <li><a href="{% url 'contact' %}">Kontakt</a></li>
+        <li><a href="{% url 'menu:home' %}">Menu / Zamów online</a></li>
+        <li class="nav-account">
+          <span class="nav-account-port">
+            <div class="nav-account-img"></div>Konto<i class="arrow arrow-down nav-arrow"></i>
+          </span>
+          <div class="nav-account-dropdown-box">
+            {% if user.is_authenticated  %}
+                <span>Witaj,</span>
+                <span>{{ user.username }}</span>
+                <a href="{% url 'profile' %}">Moje konto</a>
+                <a href="{% url 'zamowienia' %}">Zamówienia</a>
+                <a href="{% url 'user_cart' %}">Koszyk</a>
+                <a href="{% url 'logout' %}">Wyloguj</a>
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'admin:index' %}">Admin Panel</a>
+                {% endif %}
+            {% else %}
+              <a href="{% url 'login' %}">Zaloguj</a>
+              <a href="{% url 'register' %}">Zarejestruj</a>
+            {% endif %}
+          </div>
+        </li>
+        {% if user.is_authenticated  %}
+            <li class="mob-nav-account-li"><a href="{% url 'profile' %}">Moje konto</a></li>
+            <li class="mob-nav-account-li"><a href="{% url 'zamowienia' %}">Zamówienia</a></li>
+            <li class="mob-nav-account-li"><a href="{% url 'user_cart' %}">Koszyk</a></li>
+            <li class="mob-nav-account-li"><a href="{% url 'logout' %}">Wyloguj</a></li>
+            {% if request.user.is_superuser %}
+                <li class="mob-nav-account-li"><a href="{% url 'admin:index' %}">Admin Panel</a></li>
+            {% endif %}
+        {% else %}
+            <li class="mob-nav-account-li"><a href="{% url 'login' %}">Zaloguj</a></li>
+            <li class="mob-nav-account-li"><a href="{% url 'register' %}">Zarejestruj</a></li>
+        {% endif %}
+      </ul>
+      <a href="{% url 'main' %}">
+        <div class="mob-navbar-text-brand">Yakitori Grill Bar</div>
+      </a>
+    </div>
+  </nav>
+</div>
+
+<script>
+    $( document ).ready(() => {
+        $('.mob-navbar-menu').click(function () {
+            let display = $('#ul-nav').css('display') == 'flex' ? '' : 'flex';
+            $('#ul-nav').css('display', display);
+            checkContentWrapperHeight();
+        });
+        $('body').click((e) => {
+            if (e.target.closest("#ul-nav") === null && e.target.closest("#mob-navbar-menu") === null) {
+                let display = $('#ul-nav').css('display') == 'flex' ? '' : '';
+                $('#ul-nav').css('display', display);
+            }
+        })
+    });
+</script>

@@ -1,0 +1,161 @@
+<!-- Footer -->
+{% load i18n %}
+{% load static %}
+
+
+<link rel ="stylesheet" href ="{% static 'css\footer.css' %}">
+
+<footer id="footer">
+
+  <div class="footer-wrapper">
+    <div class="left">
+      <h3>Kontakt</h3>
+      <div class="content">
+        {# {% trans 'Welcome,' %} #}
+        {% comment %} dane wyciagane z "globalnej zmiennej" bar_informations (model w contact) {% endcomment %}
+        {% if bar_informations %}
+          <p>{{bar_informations.code}} {{bar_informations.city}}</p>
+          <p>{{bar_informations.street}}</p>
+          <p>tel. {{bar_informations.number}}</p>
+          <p><a href="mailto:{{info.email}}">{{bar_informations.email}}</a></p>
+        {% else %}
+          <p>Brak modelu danych! Dodaj w panelu admina.</p>
+        {% endif %}
+        </div>
+    </div>
+    <div class="right">
+          <!-- Content -->
+          <h3>GODZINY PRZYJMOWANIA ZAMÓWIEŃ</h3>
+          <div class="content">
+            {% comment %} godziny wyciagane z "globalnej zmiennej" opening_hours (model w contact) {% endcomment %}
+            {% if realization_hours %}
+              {% for k,v in final_dictionary_realization_hours.items %}
+                <p>{{k}}: {{v}}
+              {% endfor %}
+            {% else %}
+              <p>Brak dodanych godzin realizacji zamówień! Dodaj w panelu admina.</p>
+            {% endif %}
+          </div>
+    </div>
+    <div class="right">
+      <!-- Content -->
+      <h3>GODZINY OTWARCIA</h3>
+      <div class="content">
+        {% comment %} godziny wyciagane z "globalnej zmiennej" opening_hours (model w contact) {% endcomment %}
+        {% if opening_hours %}
+          {% for k,v in final_dictionary.items %}
+            <p>{{k}}: {{v}}
+          {% endfor %}
+        {% else %}
+          <p>Brak dodanych godzin otwarcia! Dodaj w panelu admina.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</footer>
+
+{% if user.is_authenticated  %}
+    <div class="mob-footer flex-row-raw flex-align-items-center" id="mob-footer">
+      <a class="mob-cart-icon" id="mob-cart-icon">
+        <div class="mob-cart-img">
+          <div class="mob-cart-items-count-box" id="mob-cart-items-count-box">
+            <div class="mob-cart-items-count" id="mob-cart-items-count">
+            </div>
+          </div>
+        </div>
+        <label>Koszyk</label>
+      </a>
+    <!--   <div class="mob-navbar-menu" id="mob-navbar-menu2">-->
+    <!--    <div class="mob-navbar-menu-burger"></div>-->
+    <!--    <div class="mob-navbar-menu-text">Menu</div>-->
+    <!--  </div>-->
+    </div>
+{% endif %}
+<div class="mob-footer-cart" id="mob-footer-cart" style="display: none">
+  <h1 class="mob-footer-cart-content">Koszyk</h1>
+  <div class="mob-footer-cart-content" id="mob-footer-cart-content">
+
+  </div>
+  <div class="mob-footer-cart-content">
+      <div class="menu-cart-product-spacer"></div>
+      <div class="menu-category-content">
+          <div class="menu-cart-product">
+              <div class="menu-cart-product-left">
+                  Dostawa:
+              </div>
+              <div class="menu-cart-product-quantity">
+                      {{bar_informations.delivery_cost}}
+              </div>
+          </div>
+          <div class="menu-cart-product">
+              <div class="menu-cart-product-left">
+                  Razem:
+              </div>
+              <div class="menu-cart-product-quantity" id="mob-menu-cart-product-quantity">
+              </div>
+          </div>
+      </div>
+      <a href="{% url 'user_cart' %}">
+      <button class="product-button">Zamów</button></a>
+  </div>
+</div>
+<script>
+  $('#mob-cart-icon').on("click", () => {
+    let display = $('#mob-footer-cart').css("display") === "none" ? "block" : "none";
+    $('#mob-footer-cart').css("height", window.innerHeight-$('#mob-footer').outerHeight(true)-$('#nav-logo').outerHeight(true));
+    $('#mob-footer-cart').css("display", display);
+  });
+
+  var mobFooterCartTimer = null;
+  $(window).resize(function() {
+      if (mobFooterCartTimer !== null)
+        clearTimeout(mobFooterCartTimer);
+      mobFooterCartTimer = setTimeout(() => {
+          if (window.innerWidth>890) {
+            $('#mob-footer-cart').css("display", "none");
+            $('#footer').css("margin-bottom", "0");
+          } else {
+                {% if user.is_authenticated  %}
+                    $('#footer').css("margin-bottom", "50px");
+                {% endif %}
+          }
+
+
+        $('#mob-footer-cart').css("height", window.innerHeight-$('#mob-footer').outerHeight(true)-$('#nav-logo').outerHeight(true));
+      }, 500)
+  });
+
+  function mobShowPopUp(productslug) {
+    if( typeof showPopUp !== "undefined")
+      showPopUp(productslug);
+  }
+
+</script>
+{% if user.is_authenticated  %}
+  <script>
+      if (window.innerWidth<890) {
+          $('#footer').css("margin-bottom", "50px");
+      } else {
+          $('#footer').css("margin-bottom", "0");
+      }
+      getUserCart();
+     $(document).on("userCartLoaded", (event, userCart) => {
+        updateCartIcon(userCart);
+        listUserCartMob(userCart);
+    });
+     $(document).on("userNotLoged", () => {
+        $('#mob-footer-cart-content').html("Brak produktów w koszyku");
+        $('#mob-menu-cart-product-quantity').html(parseInt(delivery_cost === undefined ? 19 : delivery_cost) + " zł");
+    });
+  </script>
+{% else %}
+<script>
+    $('#footer').css("margin-bottom", "0px");
+    $('#mob-footer-cart-content').html("Brak produktów w koszyku");
+    $('#mob-menu-cart-product-quantity').html(parseInt(delivery_cost === undefined ? 19 : delivery_cost) + " zł");
+    $('#mob-cart-items-count-box').css("display", "none");
+</script>
+{% endif %}
+
+<!-- Footer -->

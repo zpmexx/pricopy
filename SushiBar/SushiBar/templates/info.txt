@@ -1,0 +1,3 @@
+GLOBALNY TEMPALTES
+Przydatne gdy chcesz użyc template'u wykorzystywanego w wielu miejscach (navbar/footer etc). 
+W template zamiast nazwy patha nazwapki\template.html dodaje sie sam link template.html lub folder w ktorym sie znajduje, np xyz\template.html 

@@ -1,0 +1,90 @@
+<!doctype html>
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static "users/order.css" %}">
+{% endblock %}
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+    <link rel ="stylesheet" href ="{% static 'users/style.css' %}">
+        <title> Zamówienie </title>
+        <div class="content-wrapper login-box-content-wrapper">
+          <div class="login-box" style="width: 100%; padding-bottom: 5px">
+            <h1>Zamówienie</h1>
+
+              <div class="flex-column-content margin-5">
+                <a href="{% url 'zamowienia' %}" class="text-decoration-none"><< Powrót do zamówień</a>
+                <div class="order-page-header">
+                    <label>Zamówienie # </label> <span> {{user_order.orderId}}</span>
+                    <div class="order-page-status border-color-{{user_order.status}}"><span>{{ user_order.statusStr }}</span></div>
+                    {% if user_order.status == 1 and user_order.payment_status == 0 %}
+                        <form method="POST" class="login-box-form order-form">
+                            {% csrf_token %}
+                            <input type="submit" class="product-button" name="payagain" value="Ponów płatność"/>
+                        </form>
+                        <form method="POST" class="login-box-form order-form">
+                            {% csrf_token %}
+                            <input type="submit" class="product-button background-color-danger" name="cancelorder" value="Anuluj zamówienie"/>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="order-page-date">
+                    <span>{{ user_order.created|date:'d M Y H:i' }}</span>
+                </div>
+                  <div class="spacer"></div>
+                <div class="order-page-personaldata order-page-box">
+                    <header>Dane użytkownika: </header>
+                    <label>Imię i nazwisko: </label><span>{{user_order.user_first_last_name}}</span>
+                    <div><label>Numer telefonu: </label><span>{{user_order.phone_number}}</span></div>
+                    <div><label>Adres dostawy: </label><span>Ul. {{user_order.street}} {{user_order.house_number}}{% if user_order.flat_number|length > 0 %}/{{user_order.flat_number}}{% endif %}, {{user_order.city}} {{user_order.postal_code}}</span></div>
+                </div>
+                <div class="order-page-products order-page-box">
+                    <header>Zamówione dania: </header>
+                    <table class="mytable">
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Ilość</th>
+                                <th>Cena</th>
+                                <th>Wartość</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, product in user_order.get_ordered_products %}
+                                <tr>
+                                    <td>{{ product.product_name }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>{{ product.price|floatformat:2 }} zł</td>
+                                    <td>{{ product.totalPrice|floatformat:2 }} zł</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="2" class="colspan-first"></td>
+                                <td>Zamówienie:</td>
+                                <td>{{ user_order.get_products_total_price|floatformat:2 }} zł</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="colspan"></td>
+                                <td>Dostawa:</td>
+                                <td>{{ user_order.get_delivery_price|floatformat:2 }} zł</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="colspan"></td>
+                                <td>Razem:</td>
+                                <td>{{ user_order.total_price|floatformat:2 }} zł</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                  <div class="order-page-comment order-page-box">
+                      <header>Uwagi: </header>
+                      <div>{{user_order.comments}}</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

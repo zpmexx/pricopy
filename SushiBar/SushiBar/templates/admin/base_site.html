@@ -1,0 +1,41 @@
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+{% extends "admin/base.html" %}
+
+{% block welcome-msg %}
+    Witaj,
+    <strong>{{user.username}}</strong>.
+{% endblock %}
+
+{# Footer links (left side) #}
+{% block footer_links %}
+{% endblock %}
+
+{# Footer branding name (center) #}
+{% block footer_branding %}
+{% endblock %}
+
+
+{# Footer copyright (right side) #}
+{% block copyright %}
+{#  Copyright &copy; 2013 Client<br>Developed by <a href="http://yoursite.com" target="_blank">YourName</a> #}
+Yakitori-grill Panel administracyjny.
+
+{% comment %} <script>    
+$(document).ready(function(){
+  setInterval(function(){
+$.ajax({
+  type: 'GET',
+  url: "{% url 'admin:index' %}",
+  success: function(response){
+    console.log('witam');
+  },
+  error: function(response){
+    alert("No data");
+  }
+});
+  },1000);
+});
+</script> {% endcomment %}
+
+{% endblock %}
+

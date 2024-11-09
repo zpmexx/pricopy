@@ -1,0 +1,30 @@
+<!doctype html>
+{% load static %}
+<html>
+    <body>
+    {% comment %} wczytywanie templatów z global static folder {% endcomment %}
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+        {% comment %} atrybuty obiektu "news" - aktualność  {% endcomment %}
+    <link rel ="stylesheet" href ="{% static 'news/style.css' %}">
+        <div class="content-wrapper news-box-content-wrapper">
+            <div class="news-box">
+                <div class="news-box-header">
+                    {{news.title}}
+                </div>
+                <div class="news-detail-short">
+                    <div class="news-detail-short-time">
+                        {{news.date|date:'d-M-Y H:i' }}
+                    </div>
+                    <span>{{news.short_content}}</span>
+                </div>
+                <div class="news-box-container">
+                    <img class="news-detail-container-img" src="{{news.image.url}}">
+                    <span class="news-box-container-description">{{news.content|linebreaksbr}}</span>
+                </div>
+                {% comment %} <h4>{{news.slug}}</h4> {% endcomment %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </body>
+</html>

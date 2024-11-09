@@ -1,0 +1,18 @@
+<!doctype html>
+{% load static %}
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+        <title> Sukces </title>
+        <link rel ="stylesheet" href ="{% static 'users/style.css' %}">
+        <div class="content-wrapper">
+          <div class="login-box">
+            <h1>Hasło zostało zmienione</h1>
+            <p>Możesz teraz zalogować się do swojego profilu przy użyciu nowego hasła</p>
+            {% comment %} <a href="{% url 'users/login.html' %}">Zaloguj</a> {% endcomment %}
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

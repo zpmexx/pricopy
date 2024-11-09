@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+
+    {% for text in main_content %}
+        <p>{{text.content}}</p>
+    {% endfor %}
+    
+    {% for new in latest_three_news  %}
+        <ul>   
+            <li><a href="{% url 'news:detail' new.slug %}">{{new.title}}</a></li>
+        </ul>
+    {% endfor %}
+
+    {% include 'footer.html' %}
+    </body>
+</html>

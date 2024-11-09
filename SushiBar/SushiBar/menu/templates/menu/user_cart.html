@@ -1,0 +1,139 @@
+<!doctype html>
+{% load static %}
+<html>
+    <body>
+        <title> Koszyk </title>
+    {% comment %} wczytywanie templatów z global static folder {% endcomment %}
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+    <link rel ="stylesheet" href ="{% static 'menu/user_cart.css' %}">
+        {% comment %} listowanie wszystkich obiektów "news" - atkualność z bazy danych {% endcomment %}
+
+    {% include 'menu/popup_message.html' %}
+        <div class="content-wrapper" style="max-width: 1100px">
+            <div class="content-wrapper-header-box">
+                <header>Koszyk</header>
+            </div>
+            {% include 'restaurant_status.html' %}
+            <section class="flex-column-content" style="margin-top: 0; padding: 10px;">
+                <div class="user-cart-cart">
+                        <header>Podsumowanie koszyka:</header>
+                        <div class="menu-category-content" id="menu-cart-content">
+                            {% comment %}
+                                {% for item in user_items %}
+                                        <div class="menu-cart-product">
+                                            <div class="menu-cart-product-left">
+                                                <div class="menu-cart-product-img" style="background-image: url('/media/{{item.product.image}}')"></div>
+                                                <div class="menu-cart-product-name">{{item.quantity}}x {{item.product.name}}</div>
+                                            </div>
+                                            <div class="menu-cart-product-left">
+                                                <div class="menu-cart-product-quantity">
+                                                    <div class="menu-cart-product-price">{{item.priceXquantity}} zł</div>
+                                                    <div class="menu-cart-product-change-quantity">
+                                                        <a href="{% url 'menu:product_quantity_increase' item.product.slug %}">+</a>
+                                                        <a href="{% url 'menu:product_quantity_decrease' item.product.slug %}">-</a>
+                                                    </div>
+                                                </div>
+                                                <div class="user-cart-product-delete">
+                                                    <a href="{% url 'menu:delete_from_cart' item.product.slug %}">USUŃ</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                {% endfor %}
+                            {% endcomment %}
+                        </div>
+                        <div id="menu-cart-content-rest">
+                            {% if cart_status_msg == 'fine' %}
+                            <p>Koszty dostawy: {{ bar_informations.delivery_cost }} zł</p>
+                            <p id="menu-cart-to-pay"></p>
+                            <form method = "POST" class="login-box-form profile-form flex-column-content flex-align-items-right">
+                                {% csrf_token %}
+                                <input type="submit" value="Wyczyść koszyk" name="clearcart" style="width: 130px">
+                            </form>
+                            <header>Adres dostawy:</header>
+                                <form method = "POST"  class="login-box-form profile-form">
+                                    {% csrf_token %}
+                                    <div class="user-cart-address-info" id="user-cart-address-info">
+                                        <div><label>Imię i Nazwisko:</label><span>{{address_order_form.user_first_last_name.value}}</span></div>
+                                        <div><label>Numer telefonu:</label><span>{{address_order_form.phone_number.value}}</span></div>
+                                        <div><label>Ulica:</label><span>{{address_order_form.street.value}}</span></div>
+                                        <div><label>Numer domu:</label><span>{{address_order_form.house_number.value}}</span></div>
+                                        <div><label>Numer miekszania:</label><span>{{address_order_form.flat_number.value}}</span></div>
+                                        <div><label>Kod pocztowy:</label><span>{{address_order_form.postal_code.value}}</span></div>
+                                        <div><label>Miasto:</label><span>{{address_order_form.city.value}}</span></div>
+                                        <div><a id="user-cart-change-address" class="uppercase cursor-pointer">Zmień adres dostawy</a></div>
+                                    </div>
+                                    <div class="container user-cart-address-form" id="user-cart-address-form">
+                                        <div class="profile-field-box">
+                                        <div class="flex-column-content profile-field-margin">
+                                            <label>Imię i Nazwisko:</label><div class="">{{address_order_form.user_first_last_name}}</div>
+                                        </div>
+                                            <div class="flex-column-content profile-field-margin">
+                                                <label>Numer telefonu:</label><div class="">{{address_order_form.phone_number}}</div>
+                                            </div>
+                                            <div class="flex-column-content profile-field-margin">
+                                                <label>Ulica:</label><div class="">{{address_order_form.street}}</div>
+                                            </div>
+                                            <div class="flex-column-content profile-field-margin">
+                                                <label>Numer domu:</label><div class="">{{address_order_form.house_number}}</div>
+                                            </div>
+                                            <div class="flex-column-content profile-field-margin">
+                                                <label>Numer miekszania:</label><div class="">{{address_order_form.flat_number}}</div>
+                                            </div>
+                                            <div class="flex-column-content profile-field-margin">
+                                                <label>Kod pocztowy:</label><div class="">{{address_order_form.postal_code}}</div>
+                                            </div>
+                                            <div class="flex-column-content profile-field-margin">
+                                                <label>Miasto:</label><div class="">{{address_order_form.city}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <header>Sposób zapłaty:</header>
+                                    <div class="flex-column-content profile-field-margin">
+                                        <div class="">{{order_form.choice}} Uwaga Zamówienia realizujemy na terenie Poznania.</div>
+                                    </div>
+                                    <header></header>
+                                    <div class="flex-column-content profile-field-margin">
+                                        <label>Uwagi:</label><div class="">{{order_form.comments}}</div>
+                                    </div>
+                                    {% if final_realization_status == 2 %}
+                                    {% comment %} {{realization_status.message}}  {% endcomment %}
+                                    {{final_realization_message}}
+                                    {% comment %} <input type="submit" value="Zamów" disabled> {% endcomment %}
+                                    {% else %}
+                                    {% comment %} {{final_realization_message}} {% endcomment %}
+                                    <input type="submit" value="Zamów">
+                                    {% endif %}
+
+                                </form>
+                            </div>
+                        {% endif %}
+                </div>
+            </section>
+        </div>
+        <script>
+            $('#user-cart-change-address').click(function() {
+                $('#user-cart-address-info').css("display", "none");
+                $('#user-cart-address-form').css("display", "block");
+            });
+            {% if address_order_form.user_first_last_name.value == None or address_order_form.phone_number.value == None or address_order_form.street.value == None or address_order_form.house_number.value == None or address_order_form.postal_code.value == None or address_order_form.city.value == None %}
+                $('#user-cart-address-info').css("display", "none");
+                $('#user-cart-address-form').css("display", "block");
+            {% endif %}
+        </script>
+        {% if user.is_authenticated  %}
+          <script>
+              getUserCart();
+             $(document).on("userCartLoaded", (event, userCart) => {
+                updateCartIcon(userCart);
+                listUserCartMain(userCart);
+            });
+             function mobShowPopUp(productslug) {
+                if( typeof showPopUp !== "undefined")
+                  showPopUp(productslug);
+              }
+          </script>
+        {% endif %}
+    {% include 'footer.html' %}
+    </body>
+</html>

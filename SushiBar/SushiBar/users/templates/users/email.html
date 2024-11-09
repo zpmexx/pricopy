@@ -1,0 +1,12 @@
+Witamy! Widzisz tę wiadomośc, poniważ wysłałeś prośbę o reset hasła na ten mail na stronie {{ site_name }}.
+
+Naciśnij proszę link poniżej, jeśli chcesz dokonać zmiany hasła:
+{% block reset_link %}
+{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+{% comment %}{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %} - powinno być tak, ale skądś bierze sie slash dodatkowy, dlatego z łapy wpisałem{% endcomment %} 
+{% endblock %}
+'Nazwa Twojego użytkownika to:' {{ user.get_username }}
+
+ Dziękujemy za odwiedzenie naszej strony! 
+
+Yakatori

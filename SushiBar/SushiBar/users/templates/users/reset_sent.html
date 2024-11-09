@@ -1,0 +1,17 @@
+<!doctype html>
+{% load static %}
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+        <title> Wysłano </title>
+        <link rel ="stylesheet" href ="{% static 'users/style.css' %}">
+        <div class="content-wrapper">
+          <div class="login-box">
+            <h1>Link do zresetowania hasła został wysłany</h1>
+            <p>Wysłaliśmy wiadomość na podany adres email. Sprawdź swoją skrzynkę i kieruj się wskazówkami dotyczącymi zmiany hasła.</p>
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

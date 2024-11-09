@@ -1,0 +1,34 @@
+<!doctype html>
+{% load static %}
+<html>
+    <body>
+    {% comment %} wczytywanie templatów z global static folder {% endcomment %}
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+    <link rel ="stylesheet" href ="{% static 'news/style.css' %}">
+    <title>Artykuły</title>
+    <div class="content-wrapper news-box-content-wrapper">
+        {% comment %} listowanie wszystkich obiektów "news" - atkualność z bazy danych {% endcomment %}
+        <div class="content-wrapper-header-box">
+            <header>Aktualności</header>
+        </div>
+        <section class="flex-column-content">
+            {% for new in news  %}
+            <a href="{% url 'news:detail' new.slug %}" class="news-box">
+                <div class="">
+                    <div class="news-box-header">
+                        {{new.title}}
+                    </div>
+                    <div class="news-box-container">
+                        <div class="news-box-container-img" style="background-image: url('{{ new.image.url }}')"></div>
+                        <div class="news-box-container-description">{{new.short_content}}</div>
+                    </div>
+                    {% comment %} przekierowanie na podstrone danej aktualności {% endcomment %}
+                </div>
+            </a>
+            {% endfor %}
+        </section>
+    </div>
+    {% include 'footer.html' %}
+    </body>
+</html>

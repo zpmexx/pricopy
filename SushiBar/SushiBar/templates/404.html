@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+    <body>
+        {% include 'head.html' %}
+        {% include 'navbar.html' %}
+        <div class="content-wrapper login-box-content-wrapper">
+          <div class="login-box" style="width: 100%; padding-bottom: 5px">
+            <h1>Wystąpił jakiś błąd</h1>
+              Nie znaleziono strony. <a href="{% url 'main' %}">Wróć na stronę główną.</a>
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

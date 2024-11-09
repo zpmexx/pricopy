@@ -1,0 +1,25 @@
+<!doctype html>
+{% load static %}
+<html>
+    <body>
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+        <title> Reset Hasła </title>
+        <link rel ="stylesheet" href ="{% static 'users/style.css' %}">
+        <div class="content-wrapper">
+          <div class="login-box">
+            <h1>Resetowanie hasła</h1>
+            <p>Zapomniałeś hasła?</p>
+            <p>Jeśli tak, podaj swój adres email poniżej, a my wyślemy na niego link aktywacyjny resetowania hasła.</p>
+            <form method="POST" class="login-box-form">
+                <div class="container">
+                    {% csrf_token %}
+                    {{form}}
+                </div>
+            <input type="Submit" name="Wyślij email">
+            </form>
+          </div>
+        </div>
+        {% include 'footer.html' %}
+    </body>
+</html>

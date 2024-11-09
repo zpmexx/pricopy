@@ -1,0 +1,51 @@
+{% load crispy_forms_tags %}
+<!doctype html>
+<html>
+    <body>
+    {% comment %} wczytywanie templatów z global static folder {% endcomment %}
+    {% include 'head.html' %}
+    {% include 'navbar.html' %}
+        {% for message in messages  %}
+                <p style = "font-size: 40px;">{{message}}</p>
+        {% endfor %}
+        <title>{{product.name}}</title>
+        <img src="{{product.image.url}}"></img>
+        <p><a href="{% url 'menu:add_to_cart' product.slug %}">DODAJ DO KOSZYKA</a></p>
+        <p>{{product.name}}</p>
+        <p>{{product.description}}</p>
+        <p>Cena: {{product.price}} zł</p>
+        <p>Dostępnośc: {{product.get_status_display}}</p>
+        <p>Kalorie: {{product.kcal}}</p>
+        <p>Ocena: {{product.get_rating}} Liczba głosów: {{product.ratings_count}}</p>
+        {% if user.is_authenticated  %}
+            {% if user in rated_users %}
+                <p>Twoja ocena produktu: {{user_vote.value}}</p>
+                <form method = "POST">
+                {% csrf_token %}
+                    {{comment_form|crispy}}
+                    <input type="submit" value="Komentuj", name = "comment_form_submit">
+                </form>
+            {% else %}
+                <form method = "POST">
+                {% csrf_token %}
+                    {{rating_form}}
+                    <input type="submit" value="Oceń", name = "rating_form_submit">
+                </form>
+            {% endif %}
+            {% else %}
+            <p>Zaloguj się, aby móc oceniać i komentować!</p>
+            <a href="{% url 'login' %}">Logowanie</a>
+        {% endif %}
+        <p>Komentarze</p>
+        {% if product.comments_count == 0 %}
+            <p>Brak komentarzy do tego produktu</p>
+        {% else %}
+            <p>Liczba komentarzy: {{product.comments_count}}</p>
+            {% for comment in product.get_comments %}
+                <li>{{comment.user}}: {{comment.content}}</li>
+            {% endfor %}
+        {% endif %}
+    {% include 'footer.html' %}
+    </body>
+</html>
+

@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+    <body>
+        {% include 'head.html' %}
+        {% include 'navbar.html' %}
+        <title> O nas </title>
+            <div class="content-wrapper" style="max-width: 1100px">
+                <div class="content-wrapper-header-box">
+                    <header>O NAS</header>
+                </div>
+                <section class="flex-column-content about-us-section">
+                <p>{{text.content | safe}}</p>
+                </section>
+            </div>
+        {% include 'footer.html' %}
+    </body>
+</html>
